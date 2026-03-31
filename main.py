@@ -13,11 +13,17 @@ client = genai.Client(api_key=api_key)
 def main():
     
     print("Hello from aiagent!")
+    prompt="Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
 
     response = client.models.generate_content(
-            model='gemini-2.5-flash', contents="Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.")
+            model='gemini-2.5-flash', contents=prompt)
 
-    print(response.text)
+    if response.usage_metadata == None:
+        raise RuntimeError("Metadata missing")
+    print("User prompt: ", prompt)
+    print("Prompt tokens: ", response.usage_metadata.prompt_token_count) 
+    print("Response tokens: ", response.usage_metadata.candidates_token_count)
+    print("Response: ", response.text)
 
 if __name__ == "__main__":
     main()
